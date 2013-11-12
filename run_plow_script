@@ -1,8 +1,10 @@
 #! /bin/bash
-
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
+
+# Kill existing plow.rb instances
+for X in `ps aux | grep plow.rb $1 | awk {'print $2'}`; do kill $X; done
 
 # need to cd to the proper directory for
 # relative path reasons in the ruby code
-cd ~/Desktop/jinglebots/robot
-ruby speak.rb
+cd /Applications/tracktor-plow
+ruby plow.rb > /dev/null 2>&1 &
