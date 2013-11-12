@@ -1,5 +1,5 @@
 ## Copy paste your User Token into the quotes here:
-@user_token = "NIQebp8"
+@user_token = ""
 
 require 'dino'
 require 'json'
@@ -9,19 +9,19 @@ load 'light_show.rb'
 ## Begin Setup
 board = Dino::Board.new(Dino::TxRx::Serial.new)
 
-@led_1 = Dino::Components::Led.new(pin: 8,  board: board)
-@led_2 = Dino::Components::Led.new(pin: 9,  board: board)
-@led_3 = Dino::Components::Led.new(pin: 10, board: board)
-@led_4 = Dino::Components::Led.new(pin: 11, board: board)
-@led_5 = Dino::Components::Led.new(pin: 12, board: board)
-@led_6 = Dino::Components::Led.new(pin: 13, board: board)
+@led_1 = Dino::Components::Led.new(:pin => 8,  :board => board)
+@led_2 = Dino::Components::Led.new(:pin => 9,  :board => board)
+@led_3 = Dino::Components::Led.new(:pin => 10, :board => board)
+@led_4 = Dino::Components::Led.new(:pin => 11, :board => board)
+@led_5 = Dino::Components::Led.new(:pin => 12, :board => board)
+@led_6 = Dino::Components::Led.new(:pin => 13, :board => board)
 
-@button_1 = Dino::Components::Button.new(pin: 2, board: board)
-@button_2 = Dino::Components::Button.new(pin: 3, board: board)
-@button_3 = Dino::Components::Button.new(pin: 4, board: board)
-@button_4 = Dino::Components::Button.new(pin: 5, board: board)
-@button_5 = Dino::Components::Button.new(pin: 6, board: board)
-@button_6 = Dino::Components::Button.new(pin: 7, board: board)
+@button_1 = Dino::Components::Button.new(:pin => 2, :board => board)
+@button_2 = Dino::Components::Button.new(:pin => 3, :board => board)
+@button_3 = Dino::Components::Button.new(:pin => 4, :board => board)
+@button_4 = Dino::Components::Button.new(:pin => 5, :board => board)
+@button_5 = Dino::Components::Button.new(:pin => 6, :board => board)
+@button_6 = Dino::Components::Button.new(:pin => 7, :board => board)
 
 def turn_all_off
   (1..6).each{|n| turn_off(n)}
@@ -73,18 +73,17 @@ end
 end
 
 def react_with_number(number)
-  # response = JSON.parse(`curl 'http://tracktor.herokuapp.com/toggle?button=#{number}&token=#{@user_token}'`)
-  # puts response
+  response = JSON.parse(`curl 'http://tracktor.herokuapp.com/toggle?button=#{number}&token=#{@user_token}'`)
+  puts response
 
-  # if response["success"]
-  #   if response["on"] == true
+  if response["success"]
+    if response["on"] == true
       turn_all_off
       turn_on(number)
-      puts number
-    #   else
-    #     turn_all_off
-    #   end
-    # end
+    else
+      turn_all_off
+    end
+  end
 end
 
 ## End of Setup
