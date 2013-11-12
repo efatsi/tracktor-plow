@@ -27,6 +27,10 @@ def turn_all_off
   (1..6).each{|n| turn_off(n)}
 end
 
+def turn_all_on
+  (1..6).each{|n| turn_on(n)}
+end
+
 def turn_on(number)
   led(number).send(:on)
 end
@@ -73,16 +77,26 @@ end
 end
 
 def react_with_number(number)
-  response = JSON.parse(`curl 'http://tracktor.herokuapp.com/toggle?button=#{number}&token=#{@user_token}'`)
-  puts response
+  begin
+    response = JSON.parse(`curl 'http://tracktor.herokuapp.com/toggle?button=#{number}&token=#{@user_token}'`)
+    puts response
 
-  if response["success"]
-    if response["on"] == true
-      turn_all_off
-      turn_on(number)
-    else
-      turn_all_off
+    if response["success"]
+      if response["on"] == true
+        turn_all_off
+        turn_on(number)
+      else
+        turn_all_off
+      end
     end
+  rescue
+    turn_all_on
+    sleep(0.1)
+    turn_all_off
+    sleep(0.1)
+    turn_all_on
+    sleep(0.1)
+    turn_all_off
   end
 end
 

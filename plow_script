@@ -1,0 +1,8 @@
+#! /bin/bash
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
+
+# need to cd to the proper directory for
+# relative path reasons in the ruby code
+cd ~/Desktop/jinglebots/robot
+ruby speak.rb
