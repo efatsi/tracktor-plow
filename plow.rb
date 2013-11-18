@@ -32,6 +32,9 @@ def turn_all_on
 end
 
 def turn_on(number)
+  @on_timer = number
+
+  turn_all_off
   led(number).send(:on)
 end
 
@@ -43,13 +46,26 @@ def led(number)
   instance_variable_get("@led_#{number}")
 end
 
-def running_timer
-  timer_status = JSON.parse(`curl 'http://tracktor.herokuapp.com/running_timer?token=#{@user_token}'`)
-  if timer_status["running"] == true
-    timer_status["button"]
-  end
+def show_error
+  turn_all_on
+  sleep(0.1)
+  turn_all_off
+  sleep(0.1)
+  turn_all_on
+  sleep(0.1)
+  turn_all_off
 end
 
+def running_timer
+  begin
+    timer_status = JSON.parse(`curl 'http://tracktor.herokuapp.com/running_timer?token=#{@user_token}'`)
+    if timer_status["running"] == true
+      timer_status["button"]
+    end
+  rescue
+    show_error
+  end
+end
 
 ## Set button reactions
 @button_1.up do
@@ -83,20 +99,13 @@ def react_with_number(number)
 
     if response["success"]
       if response["on"] == true
-        turn_all_off
         turn_on(number)
       else
         turn_all_off
       end
     end
   rescue
-    turn_all_on
-    sleep(0.1)
-    turn_all_off
-    sleep(0.1)
-    turn_all_on
-    sleep(0.1)
-    turn_all_off
+    show_error
   end
 end
 
@@ -110,5 +119,12 @@ turn_on(on_timer) if on_timer
 puts "Ready to get to work!"
 
 # hang the code so it will listen to button clicks forever
-sleep
+while(true) do
+  sleep(5)
+  if on_timer = running_timer
+    turn_on(on_timer) unless @on_timer == on_timer
+  else
+    turn_all_off
+  end
+end
 
