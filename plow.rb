@@ -9,6 +9,8 @@ load 'light_show.rb'
 ## Begin Setup
 board = Dino::Board.new(Dino::TxRx::Serial.new)
 
+@sensor = Dino::Components::Sensor.new(:pin => 'A0', :board => board)
+
 @led_1 = Dino::Components::Led.new(:pin => 8,  :board => board)
 @led_2 = Dino::Components::Led.new(:pin => 9,  :board => board)
 @led_3 = Dino::Components::Led.new(:pin => 10, :board => board)
@@ -94,7 +96,8 @@ end
 
 def react_with_number(number)
   begin
-    response = JSON.parse(`curl 'http://tracktor.herokuapp.com/toggle?button=#{number}&token=#{@user_token}'`)
+    plant = ((number - 1) * 3) + adjustment
+    response = JSON.parse(`curl 'http://tracktor.herokuapp.com/toggle?button=#{plant}&token=#{@user_token}'`)
     puts response
 
     if response["success"]
@@ -109,12 +112,28 @@ def react_with_number(number)
   end
 end
 
+def adjustment
+  # 450-675 #=> 1
+  # 225-449 #=> 2
+  # 0-223   #=> 3
+
+  value = @sensor.value.to_i
+
+  if value < 225
+    3
+  elsif value < 450
+    2
+  else
+    1
+  end
+end
+
 ## End of Setup
 
 on_timer = running_timer
 
 LightShow.new(@led_1, @led_2, @led_3, @led_4, @led_5, @led_6).kick_it
-turn_on(on_timer) if on_timer
+turn_on((on_timer/3) + 1) if on_timer
 
 puts "Ready to get to work!"
 
