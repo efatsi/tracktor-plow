@@ -125,6 +125,7 @@ while(true) do
     turn_on(on_timer) unless @on_timer == on_timer
   else
     turn_all_off
+    @on_timer = nil
   end
 end
 
