@@ -144,7 +144,7 @@ puts "Ready to get to work!"
 while(true) do
   sleep(5)
   if on_timer = running_timer
-    turn_on(on_timer) unless @on_timer == on_timer
+    turn_on((on_timer/3) + 1) unless @on_timer == on_timer
   else
     turn_all_off
     @on_timer = nil
