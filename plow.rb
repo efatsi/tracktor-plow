@@ -1,6 +1,9 @@
 ## Copy paste your User Token into the quotes here:
 @user_token = ""
 
+require 'rubygems'
+require 'bundler/setup'
+
 require 'dino'
 require 'json'
 
