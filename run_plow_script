@@ -1,5 +1,6 @@
 #! /bin/bash
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
+. /usr/local/opt/chruby/share/chruby/chruby.sh
+chruby ruby-1.9.3
 
 # Kill existing plow.rb instances
 for X in `ps aux | grep plow.rb $1 | awk {'print $2'}`; do kill $X; done
