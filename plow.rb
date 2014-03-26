@@ -54,6 +54,8 @@ def show_error
   turn_all_on
   sleep(0.1)
   turn_all_off
+
+  return false
 end
 
 def running_timer
